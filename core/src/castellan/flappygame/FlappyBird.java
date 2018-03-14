@@ -11,7 +11,7 @@ public class FlappyBird extends ApplicationAdapter {
 	private Texture fundo;
 	private int movimentoX;
 	private int movimentoY;
-
+	private int c = 0;
 	private int larg;
 	private int alt;
 
@@ -19,26 +19,28 @@ public class FlappyBird extends ApplicationAdapter {
 	public void create () {
         this.larg = Gdx.graphics.getWidth();
         this.alt = Gdx.graphics.getHeight();
+
 	    fundo = new Texture("fundo.png");
 	    batch = new SpriteBatch();
 	    bird = new Texture[3];
 	    bird[0] =  new Texture("passaro1.png");
 	    bird[1] =  new Texture("passaro2.png");
 	    bird[2] =  new Texture("passaro3.png");
+
 	}
 
 	@Override
 	public void render () {
-        movimentoX += 4;
+        c++;
+        movimentoX += 3;
+        if (c>2) c = 0;
         batch.begin();
 
         batch.draw(fundo,0,0,larg,alt);
-
-        batch.draw(bird[0],movimentoX,this.alt/2);
-        batch.draw(bird[1],movimentoX,this.alt/2);
-        batch.draw(bird[2 ],movimentoX,this.alt/2);
-
-        margens();
+		batch.draw(bird[c],movimentoX, this.alt/2);
+		margens();
+		//batch.draw(bird[1],c,this.alt/2);
+		//batch.draw(bird[2 ],c,this.alt/2);
 
         batch.end();
 	}
@@ -51,4 +53,5 @@ public class FlappyBird extends ApplicationAdapter {
             System.out.println("Moleu");
         }
     }
+
 }
