@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class FlappyBird extends ApplicationAdapter {
 	private SpriteBatch batch;
-	private Texture bird;
+	private Texture[] bird;
 	private Texture fundo;
 	private int movimentoX;
 	private int movimentoY;
@@ -21,7 +21,10 @@ public class FlappyBird extends ApplicationAdapter {
         this.alt = Gdx.graphics.getHeight();
 	    fundo = new Texture("fundo.png");
 	    batch = new SpriteBatch();
-	    bird = new Texture("passaro1.png");
+	    bird = new Texture[3];
+	    bird[0] =  new Texture("passaro1.png");
+	    bird[1] =  new Texture("passaro2.png");
+	    bird[2] =  new Texture("passaro3.png");
 	}
 
 	@Override
@@ -31,7 +34,9 @@ public class FlappyBird extends ApplicationAdapter {
 
         batch.draw(fundo,0,0,larg,alt);
 
-        batch.draw(bird,movimentoX,this.alt/2);
+        batch.draw(bird[0],movimentoX,this.alt/2);
+        batch.draw(bird[1],movimentoX,this.alt/2);
+        batch.draw(bird[2 ],movimentoX,this.alt/2);
 
         margens();
 
