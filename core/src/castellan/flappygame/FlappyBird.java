@@ -2,8 +2,13 @@ package castellan.flappygame;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Rectangle;
 
 import java.util.Random;
 
@@ -25,8 +30,17 @@ public class FlappyBird extends ApplicationAdapter {
     private Random r;
     private float altCanos;
     private int estadoJogo = 0;
+    private BitmapFont fonte;
+    private Circle pasarineo;
+    private Rectangle tuboA;
+    private Rectangle tuboB;
+    private int score = 0;
+    private ShapeRenderer sr;
     @Override
     public void create() {
+        pasarineo = new Circle();
+        tuboA = new Rectangle();
+        tuboB = new Rectangle();
         this.larg = Gdx.graphics.getWidth();
         this.alt = Gdx.graphics.getHeight();
         fundo = new Texture("fundo.png");
@@ -41,39 +55,51 @@ public class FlappyBird extends ApplicationAdapter {
         posMovCanoHor = larg;
         espaço = 300;
         r = new Random();
-
+        fonte = new BitmapFont();
+        fonte.setColor(Color.WHITE);
+        fonte.getData().setScale(6);
     }
 
     @Override
     public void render() {
-        if (estadoJogo==0){
-
-        }
         double deltaTime = Gdx.graphics.getDeltaTime();
-        movimentoX += 4;
-        posMovCanoHor -= deltaTime * 300;
-
+        //movimentoX += 4;
         c += deltaTime * 10;
-        movimentoY++;
-
         if (c >= bird.length) c = 0;
+        if (estadoJogo == 0) {
+            if (Gdx.input.justTouched()) {
+                estadoJogo = 1;
+            }
+        } else {
 
-        batch.begin();
+            posMovCanoHor -= deltaTime * 300;
 
-        batch.draw(fundo, 0, 0, larg, alt);
-        batch.draw(canoT, posMovCanoHor, alt / 2 + espaço/2 + altCanos);
-        batch.draw(canoB, posMovCanoHor, alt / 2 - canoB.getHeight() - espaço/2+ altCanos);
-        batch.draw(bird[(int) c], 120, posInicialV);
 
-        margens();
+            movimentoY++;
 
-        batch.end();
+
+            margens();
+        }
+            batch.begin();
+            batch.draw(fundo, 0, 0, larg, alt);
+            batch.draw(canoT, posMovCanoHor, alt / 2 + espaço / 2 + altCanos);
+            batch.draw(canoB, posMovCanoHor, alt / 2 - canoB.getHeight() - espaço / 2 + altCanos);
+            batch.draw(bird[(int) c], 120, posInicialV);
+            fonte.draw(batch,String.valueOf(score),larg/2,alt-50);
+            batch.end();
+
+            //sr.begin(ShapeRenderer.ShapeType.Filled);
+
+            //sr.end();
     }
 
     private void margens() {
-       // if (this.movimentoX > this.larg) this.movimentoX = -10;
+        // if (this.movimentoX > this.larg) this.movimentoX = -10;
 
-        if (posMovCanoHor <= -200) {posMovCanoHor = this.larg; altCanos = r.nextInt(400) - 200; }
+        if (posMovCanoHor <= -200) {
+            posMovCanoHor = this.larg;
+            altCanos = r.nextInt(400) - 200;
+        }
 
         if (Gdx.input.justTouched()) movimentoY = -20;
 
