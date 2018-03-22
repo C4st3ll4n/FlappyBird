@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
@@ -34,20 +35,21 @@ public class FlappyBird extends ApplicationAdapter {
     private Texture canoB;
     private Texture gameOver;
     private BitmapFont fonte;
+    private BitmapFont msg;
     private Circle pasarineo;
     private Rectangle tuboA;
     private Rectangle tuboB;
-    //private ShapeRenderer sr;
+    private ShapeRenderer sr;
 
     @Override
     public void create() {
-       /* sr = new ShapeRenderer();
-        tuboA = new Rectangle();
+        sr = new ShapeRenderer();
+        /*tuboA = new Rectangle();
         tuboB = new Rectangle();*/
 
+        this.alt = Gdx.graphics.getHeight();
         posInicialV = this.alt / 2;
         this.larg = Gdx.graphics.getWidth();
-        this.alt = Gdx.graphics.getHeight();
         fundo = new Texture("fundo.png");
         batch = new SpriteBatch();
         bird = new Texture[3];
@@ -65,6 +67,10 @@ public class FlappyBird extends ApplicationAdapter {
         fonte = new BitmapFont();
         fonte.setColor(Color.WHITE);
         fonte.getData().setScale(6);
+
+        msg = new BitmapFont();
+        msg.setColor(Color.WHITE);
+        msg.getData().setScale(3);
     }
 
     @Override
@@ -81,9 +87,9 @@ public class FlappyBird extends ApplicationAdapter {
             }
         } else {
 
-            movimentoY++;
             if (posInicialV > 0 || movimentoY < 0) posInicialV -= movimentoY;
 
+            movimentoY++;
             if (estadoJogo == 1) {
 
                 posMovCanoHor -= deltaTime * 300;
@@ -114,6 +120,18 @@ public class FlappyBird extends ApplicationAdapter {
         batch.draw(canoB, posMovCanoHor, alt / 2 - canoB.getHeight() - espaço / 2 + altCanos);
         batch.draw(bird[(int) c], 120, posInicialV);
         fonte.draw(batch, String.valueOf(score), larg / 2, alt - 50);
+
+        if (estadoJogo == 2) {
+            batch.draw(gameOver, larg / 3 - 50, alt / 2);
+            msg.draw(batch, "Toque para reiniciar", larg / 3 - 50, alt / 2 - 50);
+
+            if (Gdx.input.justTouched()) {
+                posInicialV = alt / 2;
+                estadoJogo = 1;
+                score = 0;
+                posMovCanoHor = -100;
+            }
+        }
         batch.end();
 
         tuboB = new Rectangle(posMovCanoHor, alt / 2 - canoB.getHeight() - espaço / 2 + altCanos,
@@ -121,10 +139,11 @@ public class FlappyBird extends ApplicationAdapter {
         );
         tuboA = new Rectangle(posMovCanoHor, alt / 2 + espaço / 2 + altCanos, canoT.getWidth(), canoT.getHeight());
 
-        pasarineo = new Circle(120,posInicialV,bird[0].getWidth());
+        pasarineo = new Circle(120, posInicialV, bird[0].getWidth() - 20);
+        Gdx.app.log("R ->", String.valueOf(bird[0].getWidth()));
 
-        /*pasarineo.set(120 + bird[0].getWidth()/2, posInicialV + bird[0].getHeight()/2 , bird[0].getWidth()/2);
-        sr.begin(ShapeRenderer.ShapeType.Line);
+        pasarineo.set(120 + bird[0].getWidth() / 2, posInicialV + bird[0].getHeight() / 2, bird[0].getWidth() / 2);
+        /*sr.begin(ShapeRenderer.ShapeType.Line);
         sr.rect(tuboB.x,tuboB.y,tuboB.width,tuboB.height);
         sr.rect(tuboA.x,tuboA.y,tuboA.width,tuboA.height);
         sr.circle(pasarineo.x, pasarineo.y, pasarineo.radius);
